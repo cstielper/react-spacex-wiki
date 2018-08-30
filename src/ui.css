@@ -1,0 +1,136 @@
+/* Typography
+  * ========================================================================== */
+html,
+body {
+  font-size: 1rem;
+}
+
+body {
+  font-family: sans-serif;
+  line-height: 1.4375;
+}
+
+h1,
+h2,
+h3 {
+  font-family: 'Lato', sans-serif;
+  font-weight: 800;
+}
+
+h1,
+h2 {
+  text-transform: uppercase;
+}
+
+p {
+  margin-top: 0;
+}
+
+/* Colors
+  * ========================================================================== */
+body {
+  background: #f7f7f7;
+  color: #232425;
+}
+
+a {
+  color: #3569a4;
+}
+
+/* Buttons
+  * ========================================================================== */
+.btn,
+button,
+input[type='submit'] {
+  margin: 1.5rem 0 0;
+  padding: 0.5375rem 1rem 0.6125rem;
+  font-size: 0.875em;
+  font-family: 'Lato', sans-serif;
+  font-weight: 300;
+  border-radius: 2px;
+  background: #3569a4;
+  color: #fff;
+  text-decoration: none;
+  transition: background 0.25s;
+}
+
+.btn:hover,
+button:hover,
+input[type='submit']:hover {
+  background: #275181;
+}
+
+a.btn {
+  display: table;
+}
+
+/* Layout
+  * ========================================================================== */
+html,
+body {
+  height: 100%;
+}
+
+#root {
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+
+/* Elements
+  * ========================================================================== */
+ul,
+ol {
+  margin: 0 0 0 1rem;
+  padding: 0;
+  list-style: square;
+  font-size: 0.875em;
+}
+
+/* Forms
+  * ========================================================================== */
+form {
+  border: 1px solid #b4b4b5;
+  padding: 1rem;
+}
+
+label {
+  font-size: 0.8125em;
+}
+
+select {
+  padding: 3px;
+}
+
+/* Components
+  * ========================================================================== */
+
+.component-wrapper {
+  padding-bottom: 2.5rem;
+}
+
+.component-wrapper .feature-img {
+  height: 25vh;
+  min-height: 175px;
+  max-height: 450px;
+  margin: 0;
+  position: relative;
+  overflow: hidden;
+}
+
+.component-wrapper .feature-img img {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.component-wrapper > article {
+  padding-left: 2rem;
+  padding-right: 2rem;
+}
+
+.component-wrapper .article-header h1 {
+  margin-bottom: 0.25rem;
+}
