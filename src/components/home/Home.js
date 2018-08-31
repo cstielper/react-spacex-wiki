@@ -5,6 +5,7 @@ import styled from 'styled-components';
 const Article = styled.article`
   position: relative;
   min-height: 100%;
+  width: 100%;
   padding: 0 0 2rem !important;
 
   &,
