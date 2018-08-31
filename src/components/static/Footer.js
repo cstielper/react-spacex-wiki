@@ -10,10 +10,6 @@ const Colophon = styled.footer`
 
   a {
     color: #fff;
-
-    &:hover {
-      text-decoration: none;
-    }
   }
 
   small {

@@ -62,10 +62,18 @@ input[type='submit'] {
 button:hover,
 input[type='submit']:hover {
   background: #275181;
+  color: #fff;
 }
 
 a.btn {
   display: table;
+}
+
+/* Links
+  * ========================================================================== */
+a:hover {
+  color: #275181;
+  text-decoration: none;
 }
 
 /* Layout
