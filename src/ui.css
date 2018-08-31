@@ -22,6 +22,10 @@ h2 {
   text-transform: uppercase;
 }
 
+h2 {
+  line-height: 1.125;
+}
+
 p {
   margin-top: 0;
 }
@@ -111,8 +115,8 @@ select {
 }
 
 .component-wrapper .feature-img {
-  height: 25vh;
-  min-height: 175px;
+  height: 30vh;
+  min-height: 200px;
   max-height: 450px;
   margin: 0;
   position: relative;
@@ -127,10 +131,83 @@ select {
 }
 
 .component-wrapper > article {
-  padding-left: 2rem;
-  padding-right: 2rem;
+  padding-left: 1.25rem;
+  padding-right: 1.25rem;
 }
 
 .component-wrapper .article-header h1 {
   margin-bottom: 0.25rem;
+}
+
+.article-header,
+.article-wrapper {
+  padding: 0 0.75rem;
+  margin: 0 auto;
+  max-width: 70em;
+}
+
+/* Cards
+  * ========================================================================== */
+.card {
+  padding: 0.75rem 0;
+}
+
+.card > div {
+  margin: 0.75rem;
+  padding: 1rem 1.5rem;
+  height: 100%;
+  background: #fff;
+  box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.25);
+}
+
+.card .status,
+.card .launch-success {
+  display: inline-block;
+  margin: 0 0 1.5rem;
+  padding: 0.625rem 0.625rem 0.5rem;
+  border-width: 1px;
+  border-style: solid;
+  font-size: 0.75em;
+  line-height: 1;
+  letter-spacing: 0.05625em;
+  text-transform: uppercase;
+}
+
+.card .status.active,
+.card .launch-success.successful {
+  border-color: #28a745;
+  color: #28a745;
+}
+
+.card .status.inactive,
+.card .launch-success.unsuccessful {
+  border-color: #dc3545;
+  color: #dc3545;
+}
+
+.card h3 {
+  margin-bottom: 0.125em;
+}
+
+@media (min-width: 38em) {
+  .card-wrapper {
+    display: flex;
+    flex-wrap: wrap;
+  }
+
+  .card {
+    flex: 0 0 50%;
+  }
+}
+
+@media (min-width: 62em) {
+  .card {
+    flex: 0 0 33.333%;
+  }
+}
+
+@media (min-width: 81em) {
+  .card {
+    flex: 0 0 25%;
+  }
 }

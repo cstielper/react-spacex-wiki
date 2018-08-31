@@ -2,19 +2,10 @@ import React from 'react';
 import styled from 'styled-components';
 
 const Card = styled.section`
-  padding: 0.25rem 1.25rem 1.25rem;
-  margin: 2rem 0;
-  background: #FFF;
-  box-shadow: 0 2px 5px 0 rgba(0,0,0,0.25);
-
-  h3 {
-    margin-bottom: 0.25rem;
-  }
-
   .patch {
     max-width: 45%;
     display: block;
-    margin: 1.5rem auto 0;
+    margin: 0 auto;
   }
 
   .section-header {
@@ -32,28 +23,14 @@ const Card = styled.section`
     }
 
     .launch-success {
-      padding: 0.3125rem 0.625rem 0.1875rem;
-      border-width: 1px;
-      border-style: solid;
+      margin-top: 1em;
       font-size: 0.75em;
-      letter-spacing: 0.05625em;
-      text-transform: uppercase;
-
-      &.successful {
-        border-color: #28a745;
-        color: #28a745;
-      }
-
-      &.unsuccessful {
-        border-color: #dc3545;
-        color: #dc3545;
-      }
     }
   }
 `;
 
 const LaunchCard = props => (
-  <Card>
+  <Card className="card">
     <div>
       {props.links.mission_patch_small ? (
         <img

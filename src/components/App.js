@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
 
 import Masthead from './static/Masthead';
-import Navigation from './static/Navigation';
 import Footer from './static/Footer';
 import Error404 from './static/404';
 
@@ -17,7 +16,6 @@ class App extends Component {
       <BrowserRouter>
         <React.Fragment>
           <Masthead />
-          <Navigation />
           <Switch>
             <Route path="/" component={Home} exact />
             <Route path="/launches" component={Launches} />

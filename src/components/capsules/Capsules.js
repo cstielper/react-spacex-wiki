@@ -22,16 +22,24 @@ class Capsules extends React.Component {
       <div className="component-wrapper">
         <Helmet>
           <title>SpaceX Capsules</title>
-          <meta name="description" content="Information about SpaceX capsules" />
+          <meta
+            name="description"
+            content="Information about SpaceX capsules"
+          />
         </Helmet>
         <figure className="feature-img">
-          <img src="images/capsule-sm.jpg" srcSet="images/capsule-sm.jpg 400w, images/capsule-md.jpg 800w, images/capsule-lg.jpg 1200w, images/capsule-xl.jpg 2200w" sizes="100vw"  alt="SpaceX capsule" />
+          <img
+            src="images/capsule-sm.jpg"
+            srcSet="images/capsule-sm.jpg 400w, images/capsule-md.jpg 800w, images/capsule-lg.jpg 1200w, images/capsule-xl.jpg 2200w"
+            sizes="100vw"
+            alt="SpaceX capsule"
+          />
         </figure>
         <article>
           <header className="article-header">
             <h1>SpaceX Capsules</h1>
           </header>
-          <div className="wrapper flex">
+          <div className="wrapper card-wrapper">
             {this.state.data.map(item => (
               <CapsuleCard {...item} key={'capsule-' + item.id} />
             ))}

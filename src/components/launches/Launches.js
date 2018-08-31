@@ -1,6 +1,11 @@
 import React from 'react';
 import Helmet from 'react-helmet';
+import styled from 'styled-components';
 import LaunchCard from './LaunchCard';
+
+const LaunchForm = styled.form`
+  background: #eee;
+`;
 
 class Launches extends React.Component {
   yearSelect = React.createRef();
@@ -69,16 +74,25 @@ class Launches extends React.Component {
       <div className="component-wrapper">
         <Helmet>
           <title>SpaceX Launches</title>
-          <meta name="description" content="Information about past SpaceX launches" />
+          <meta
+            name="description"
+            content="Information about past SpaceX launches"
+          />
         </Helmet>
         <figure className="feature-img">
-          <img src="images/rocket-sm.jpg" srcSet="images/rocket-sm.jpg 400w, images/rocket-md.jpg 800w, images/rocket-lg.jpg 1200w, images/rocket-xl.jpg 2200w" sizes="100vw"  alt="SpaceX rocket launching" />
+          <img
+            src="images/rocket-sm.jpg"
+            srcSet="images/rocket-sm.jpg 400w, images/rocket-md.jpg 800w, images/rocket-lg.jpg 1200w, images/rocket-xl.jpg 2200w"
+            sizes="100vw"
+            alt="SpaceX rocket launching"
+          />
         </figure>
         <article>
           <header className="article-header">
             <h1>SpaceX Launches</h1>
           </header>
-            <form>
+          <div className="article-wrapper">
+            <LaunchForm>
               <label htmlFor="form-filter-year">View by year: </label>
               <select
                 name="form-filter-year"
@@ -93,10 +107,9 @@ class Launches extends React.Component {
                   </option>
                 ))}
               </select>
-            </form>
-            <div className="wrapper flex">
-              {cards}
-            </div>
+            </LaunchForm>
+          </div>
+          <div className="wrapper card-wrapper">{cards}</div>
         </article>
       </div>
     );
