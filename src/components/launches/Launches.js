@@ -5,71 +5,177 @@ import LaunchCard from './LaunchCard';
 
 const LaunchForm = styled.form`
   background: #eee;
+
+  > div {
+    margin-top: 0.5rem;
+  }
+
+  select {
+    text-transform: capitalize;
+  }
+
+  @media (min-width: 46em) {
+    display: flex;
+    align-items: center;
+
+    > div,
+    input[type='submit'] {
+      margin-top: 0;
+    }
+
+    > div {
+      margin-right: 0.5rem;
+    }
+  }
 `;
 
 class Launches extends React.Component {
   yearSelect = React.createRef();
+  successSelect = React.createRef();
 
   constructor() {
     super();
     this.state = {
       data: [],
-      years: [],
-      filters: {
-        year: null,
-      },
+      formControls: null,
+      filters: {},
     };
   }
 
   // Grab data from the API, set it to state
-  // Take state data and create a unique array of years and set that to state
+  // Take state data and create and set formControls in state
   componentDidMount() {
     fetch('https://api.spacexdata.com/v2/launches/?order=desc')
       .then(res => res.json())
       .then(data => this.setState({ data: data }))
-      .then(() => filterYears(this.state.data))
+      .then(() => init(this.state.data))
       .catch(err => console.error(err));
 
-    const filterYears = arr => {
-      let yearsFiltered = [...new Set(arr.map(item => item.launch_year))];
+    const init = arr => {
+      let yearFiltered = [...new Set(arr.map(item => item.launch_year))];
+      yearFiltered.unshift('any');
+
+      let successesFiltered = [
+        ...new Set(arr.map(item => item.launch_success.toString())),
+      ];
+      successesFiltered.unshift('any');
 
       // 1. Take a copy of the current state
-      let years = { ...this.state.years };
+      const controls = { ...this.state.formControls };
       // 2. Update that state
-      years = yearsFiltered;
-      // // 3. Set that to state
-      this.setState({ years: years });
+      controls.launch_year = yearFiltered;
+      controls.launch_success = successesFiltered;
+      // 3. Set that to state
+      this.setState({ formControls: controls });
     };
   }
 
-  filterCards = () => {
-    const selectIndex = this.yearSelect.current.selectedIndex;
-    const year = this.yearSelect.current[selectIndex].value;
+  // Once state.formControls has some keys... build the form based on the key's array
+  buildForm = () => {
+    if (this.state.formControls && Object.keys(this.state.formControls)) {
+      return (
+        <LaunchForm onSubmit={this.setFilters}>
+          <div>
+            <label htmlFor="form-filter-year">Year: </label>
+            <select
+              name="form-filter-year"
+              id="form-filter-year"
+              ref={this.yearSelect}
+            >
+              {this.state.formControls.launch_year.map(year => (
+                <option value={year} key={year}>
+                  {year}
+                </option>
+              ))}
+            </select>
+          </div>
+          <div>
+            <label htmlFor="form-filter-success">Launch Status: </label>
+            <select
+              name="form-filter-success"
+              id="form-filter-success"
+              ref={this.successSelect}
+            >
+              {this.state.formControls.launch_success.map(status => (
+                <option value={status} key={status}>
+                  {status}
+                </option>
+              ))}
+            </select>
+          </div>
+          <input type="submit" value="Filter Launches" />
+        </LaunchForm>
+      );
+    }
+  };
+
+  // Update state.filters based on form submittal
+  setFilters = e => {
+    e.preventDefault();
 
     // 1. Take a copy of the current state
-    const yearFilter = { ...this.state.filters };
+    const filters = this.state.filters;
+
     // 2. Update that state
-    yearFilter.year = year;
+    const yearSelectIndex = this.yearSelect.current.selectedIndex;
+    let year = this.yearSelect.current[yearSelectIndex].value;
+
+    if (year !== 'any') {
+      filters.launch_year = year;
+    } else {
+      delete filters.launch_year;
+    }
+
+    const successSelectIndex = this.successSelect.current.selectedIndex;
+    let success = this.successSelect.current[successSelectIndex].value;
+
+    if (success !== 'any') {
+      filters.launch_success = success;
+    } else {
+      delete filters.launch_success;
+    }
+
     // 3. Set that to state
-    this.setState({ filters: yearFilter });
+    this.setState({ filters: filters });
+  };
+
+  // If there are keys in state.filters, "for/in" through the keys
+  // For each key, reduce the data based on the key value
+  // If there are no keys in the filters array, just map over state.data and return all results
+  buildCards = () => {
+    let cards, filtered;
+
+    const filter = key => {
+      if (!filtered) {
+        filtered = this.state.data.filter(
+          card => card[key].toString() === this.state.filters[key]
+        );
+      } else {
+        filtered = filtered.filter(
+          card => card[key].toString() === this.state.filters[key]
+        );
+      }
+
+      return filtered;
+    };
+
+    if (Object.keys(this.state.filters).length) {
+      for (const prop in this.state.filters) {
+        filter(prop);
+      }
+      cards = filtered.map(card => (
+        <LaunchCard {...card} key={'flight-' + card.flight_number} />
+      ));
+    } else {
+      cards = this.state.data.map(card => (
+        <LaunchCard {...card} key={'flight-' + card.flight_number} />
+      ));
+    }
+
+    return cards;
   };
 
   render() {
-    let cards;
-    if (this.state.data.length) {
-      if (!this.state.filters.year) {
-        cards = this.state.data.map(item => (
-          <LaunchCard {...item} key={'flight-' + item.flight_number} />
-        ));
-      } else {
-        cards = this.state.data
-          .filter(item => item.launch_year === this.state.filters.year)
-          .map(item => (
-            <LaunchCard {...item} key={'flight-' + item.flight_number} />
-          ));
-      }
-    }
-
     return (
       <div className="component-wrapper">
         <Helmet>
@@ -91,25 +197,8 @@ class Launches extends React.Component {
           <header className="article-header">
             <h1>SpaceX Launches</h1>
           </header>
-          <div className="article-wrapper">
-            <LaunchForm>
-              <label htmlFor="form-filter-year">View by year: </label>
-              <select
-                name="form-filter-year"
-                id="form-filter-year"
-                onChange={this.filterCards}
-                ref={this.yearSelect}
-              >
-                <option value="">All Launches</option>
-                {this.state.years.map(year => (
-                  <option value={year} key={year}>
-                    {year}
-                  </option>
-                ))}
-              </select>
-            </LaunchForm>
-          </div>
-          <div className="wrapper card-wrapper">{cards}</div>
+          <div className="article-wrapper">{this.buildForm()}</div>
+          <div className="wrapper card-wrapper">{this.buildCards()}</div>
         </article>
       </div>
     );
