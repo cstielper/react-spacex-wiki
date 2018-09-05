@@ -6,25 +6,51 @@ import LaunchCard from './LaunchCard';
 const LaunchForm = styled.form`
   background: #eee;
 
-  > div {
-    margin-top: 0.5rem;
+  fieldset {
+    border: 0;
+    padding: 0;
+  }
+
+  legend {
+    margin-bottom: 0.5rem;
+    text-transform: uppercase;
   }
 
   select {
     text-transform: capitalize;
   }
 
-  @media (min-width: 46em) {
-    display: flex;
-    align-items: center;
+  button {
+    margin-top: 0.75rem;
+  }
 
-    > div,
-    input[type='submit'] {
-      margin-top: 0;
+  .search-results {
+    margin-top: 1.5rem;
+    font-size: 0.875rem;
+
+    span {
+      font-weight: 900;
+    }
+  }
+
+  @media (min-width: 46em) {
+    fieldset > div {
+      display: flex;
+      align-items: center;
+
+      > div,
+      button {
+        margin: 0 0.5rem 0 0;
+      }
+
+      legend {
+        margin: 0 1rem 0 0;
+      }
     }
 
-    > div {
-      margin-right: 0.5rem;
+    .search-results {
+      width: 100%;
+      margin-top: 0.5rem;
     }
   }
 `;
@@ -66,7 +92,7 @@ class Launches extends React.Component {
       controls.launch_year = yearFiltered;
       controls.launch_success = successesFiltered;
       // 3. Set that to state
-      this.setState({ formControls: controls });
+      this.setState({ formControls: controls, filteredData: this.state.data });
     };
   }
 
@@ -74,43 +100,61 @@ class Launches extends React.Component {
   buildForm = () => {
     if (this.state.formControls && Object.keys(this.state.formControls)) {
       return (
-        <LaunchForm onSubmit={this.setFilters}>
-          <div>
-            <label htmlFor="form-filter-year">Year: </label>
-            <select
-              name="form-filter-year"
-              id="form-filter-year"
-              ref={this.yearSelect}
-            >
-              {this.state.formControls.launch_year.map(year => (
-                <option value={year} key={year}>
-                  {year}
-                </option>
-              ))}
-            </select>
+        <LaunchForm>
+          <fieldset>
+            <div>
+              <legend>Filter Launches:</legend>
+              <div>
+                <label htmlFor="form-filter-year">Year: </label>
+                <select
+                  name="form-filter-year"
+                  id="form-filter-year"
+                  ref={this.yearSelect}
+                  onChange={this.setFilters}
+                >
+                  {this.state.formControls.launch_year.map(year => (
+                    <option value={year} key={year}>
+                      {year}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div>
+                <label htmlFor="form-filter-success">Launch Status: </label>
+                <select
+                  name="form-filter-success"
+                  id="form-filter-success"
+                  ref={this.successSelect}
+                  onChange={this.setFilters}
+                >
+                  {this.state.formControls.launch_success.map(status => (
+                    <option value={status} key={status}>
+                      {status}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              {this.state.filteredData &&
+              this.state.filteredData.length === 0 ? (
+                <button value="Reset Filters" onClick={this.resetFilters}>
+                  Reset Filters
+                </button>
+              ) : (
+                ''
+              )}
+            </div>
+          </fieldset>
+          <div className="search-results">
+            Viewing: <span>{this.state.filteredData.length} Launches</span>
           </div>
-          <div>
-            <label htmlFor="form-filter-success">Launch Status: </label>
-            <select
-              name="form-filter-success"
-              id="form-filter-success"
-              ref={this.successSelect}
-            >
-              {this.state.formControls.launch_success.map(status => (
-                <option value={status} key={status}>
-                  {status}
-                </option>
-              ))}
-            </select>
-          </div>
-          <input type="submit" value="Filter Launches" />
         </LaunchForm>
       );
     }
   };
 
-  // Update state.filters based on form submittal
+  // Update state.filters and state.filteredData based on form submittal
   setFilters = e => {
+    // UPDATING STATE.FILTERS
     e.preventDefault();
 
     // 1. Take a copy of the current state
@@ -137,14 +181,12 @@ class Launches extends React.Component {
 
     // 3. Set that to state
     this.setState({ filters: filters });
-  };
 
-  // If there are keys in state.filters, "for/in" through the keys
-  // For each key, reduce the data based on the key value
-  // If there are no keys in the filters array, just map over state.data and return all results
-  buildCards = () => {
-    let cards, filtered;
-
+    // UPDATING STATE.FILTEREDDATA
+    // If there are keys in state.filters, "for/in" through the keys
+    // For each key, reduce the data based on the key value
+    // If there are no keys in the filters array, set filteredData to state data
+    let filtered;
     const filter = key => {
       if (!filtered) {
         filtered = this.state.data.filter(
@@ -163,16 +205,16 @@ class Launches extends React.Component {
       for (const prop in this.state.filters) {
         filter(prop);
       }
-      cards = filtered.map(card => (
-        <LaunchCard {...card} key={'flight-' + card.flight_number} />
-      ));
+      this.setState({ filteredData: filtered });
     } else {
-      cards = this.state.data.map(card => (
-        <LaunchCard {...card} key={'flight-' + card.flight_number} />
-      ));
+      this.setState({ filteredData: this.state.data });
     }
+  };
 
-    return cards;
+  resetFilters = () => {
+    this.yearSelect.current.selectedIndex = 0;
+    this.successSelect.current.selectedIndex = 0;
+    this.setState({ filteredData: this.state.data });
   };
 
   render() {
@@ -198,7 +240,15 @@ class Launches extends React.Component {
             <h1>SpaceX Launches</h1>
           </header>
           <div className="article-wrapper">{this.buildForm()}</div>
-          <div className="wrapper card-wrapper">{this.buildCards()}</div>
+          <div className="wrapper card-wrapper">
+            {this.state.filteredData
+              ? this.state.filteredData.map(card => (
+                  <LaunchCard {...card} key={'flight-' + card.flight_number} />
+                ))
+              : this.state.data.map(card => (
+                  <LaunchCard {...card} key={'flight-' + card.flight_number} />
+                ))}
+          </div>
         </article>
       </div>
     );
