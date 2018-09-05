@@ -1,4 +1,5 @@
 import React from 'react';
+import moment from 'moment';
 import styled from 'styled-components';
 
 const Card = styled.section`
@@ -50,7 +51,7 @@ const LaunchCard = props => (
         <br />
         <span className="launch-date">
           <strong>Launch Date:</strong>{' '}
-          {new Date(props.launch_date_utc).toDateString()}
+          {moment(props.launch_date_utc).format('MMMM D, YYYY')}
         </span>
         <br />
         <span className="launch-site">
