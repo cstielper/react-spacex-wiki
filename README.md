@@ -1,6 +1,6 @@
 # SpaceX Wiki
 
-![Version 1.0](https://img.shields.io/badge/Version-1.0-brightgreen.svg)
+![Version 1.1](https://img.shields.io/badge/Version-1.1-brightgreen.svg)
 
 React based "wiki" using the [SpaceX Open Source REST API](https://github.com/r-spacex/SpaceX-API).
 
