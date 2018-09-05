@@ -69,6 +69,7 @@ class Launches extends React.Component {
       data: [],
       formControls: null,
       filters: {},
+      filtered: false,
     };
   }
 
@@ -138,8 +139,7 @@ class Launches extends React.Component {
                   ))}
                 </select>
               </div>
-              {this.state.filteredData &&
-              this.state.filteredData.length === 0 ? (
+              {this.state.filtered ? (
                 <button value="Reset Filters" onClick={this.resetFilters}>
                   Reset Filters
                 </button>
@@ -149,14 +149,14 @@ class Launches extends React.Component {
             </div>
           </fieldset>
           <div className="search-results">
-            Viewing: <span>{this.state.filteredData.length} Launches</span>
+            Viewing: <span>{this.state.filteredData.length} Launch(es)</span>
           </div>
         </LaunchForm>
       );
     }
   };
 
-  // Update state.filters and state.filteredData based on form submittal
+  // Update state.filters, state.filteredData, and state.filtered based on form submittal
   setFilters = e => {
     // UPDATING STATE.FILTERS
     e.preventDefault();
@@ -209,16 +209,16 @@ class Launches extends React.Component {
       for (const prop in this.state.filters) {
         filter(prop);
       }
-      this.setState({ filteredData: filtered });
+      this.setState({ filteredData: filtered, filtered: true });
     } else {
-      this.setState({ filteredData: this.state.data });
+      this.setState({ filteredData: this.state.data, filtered: false });
     }
   };
 
   resetFilters = () => {
     this.yearSelect.current.selectedIndex = 0;
     this.successSelect.current.selectedIndex = 0;
-    this.setState({ filteredData: this.state.data });
+    this.setState({ filteredData: this.state.data, filtered: false });
   };
 
   render() {
@@ -245,7 +245,7 @@ class Launches extends React.Component {
           </header>
           <div className="article-wrapper">{this.buildForm()}</div>
           <div className="wrapper card-wrapper">
-            {this.state.filteredData
+            {this.state.filtered
               ? this.state.filteredData.map(card => (
                   <LaunchCard {...card} key={'flight-' + card.flight_number} />
                 ))
