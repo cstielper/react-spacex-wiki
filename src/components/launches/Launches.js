@@ -24,6 +24,10 @@ const LaunchForm = styled.form`
     margin-top: 0.75rem;
   }
 
+  fieldset > div > div {
+    margin-top: 0.375rem;
+  }
+
   .search-results {
     margin-top: 1.5rem;
     font-size: 0.875rem;
